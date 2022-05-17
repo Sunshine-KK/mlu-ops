@@ -9,8 +9,8 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *************************************************************************/
-#include "bprint.h"
-#include "kernels/kernel.h"
+#include "core/logging.h"
+#include "mlu_op_kernel.h"
 
 __mlu_global__ void MLUKernelBprint(const float *x, const int32_t element_num) {
   __bang_printf("--------------bprintf test start----------------------\n");
@@ -21,5 +21,14 @@ __mlu_global__ void MLUKernelBprint(const float *x, const int32_t element_num) {
 
   __bang_printf("\n");
   __bang_printf("--------------bprintf test end----------------------\n");
+}
+
+void BprintBlock(cnrtDim3_t k_dim, cnrtFunctionType_t k_type, cnrtQueue_t queue,
+                 const float *x, const int32_t element_num) {
+  VLOG(5) << "[mluOpBprint] launch kernel policyFUnc[" << k_dim.x << ", "
+          << k_dim.y << ", " << k_dim.z << "]";
+
+  KERNEL_CHECK(
+      (MLUKernelBprint<<<k_dim, k_type, queue>>>((float *)x, element_num)));
 }
 

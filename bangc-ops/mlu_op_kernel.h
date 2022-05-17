@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (C) 2021 by Cambricon, Inc. All rights reserved.
+ * Copyright (C) 2021 Cambricon.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
@@ -9,10 +9,14 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *************************************************************************/
-#ifndef KERNELS_BPRINT_BPRINT_H_
-#define KERNELS_BPRINT_BPRINT_H_
+#ifndef MLUOP_KERNEL_EXAMPLE_H_
+#define MLUOP_KERNEL_EXAMPLE_H_
+#include <stdint.h>
 
-__mlu_global__ void MLUKernelBprint(const float *x, const int32_t element_num);
+#include "cnrt.h"
 
-#endif  // KERNELS_LOG_LOG_H_
+void BprintBlock(cnrtDim3_t k_dim, cnrtFunctionType_t k_type, cnrtQueue_t queue,
+                 const float *x, const int32_t element_num);
+
+#endif // MLUOP_KERNEL_EXAMPLE_H_
 

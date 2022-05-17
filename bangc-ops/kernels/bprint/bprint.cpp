@@ -9,8 +9,6 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *************************************************************************/
-#include "bprint.h"
-
 #include <string>
 
 #include "core/context.h"
@@ -21,6 +19,7 @@
 #include "core/type.h"
 #include "kernels/kernel.h"
 #include "mlu_op.h"
+#include "mlu_op_kernel.h"
 
 void PolicyFuncBprint(const mluOpHandle_t &handle, cnrtDim3_t *k_dim,
                       cnrtFunctionType_t *k_type) {
@@ -48,10 +47,7 @@ mluOpStatus_t MLUOP_WIN_API mluOpBprint(mluOpHandle_t handle,
   PolicyFuncBprint(handle, &k_dim, &k_type);
 
   const int32_t element_num = mluOpGetTensorElementNum(x_desc);
-  VLOG(5) << "[mluOpBprint] launch kernel policyFUnc[" << k_dim.x << ", "
-          << k_dim.y << ", " << k_dim.z << "]";
-  KERNEL_CHECK((MLUKernelBprint<<<k_dim, k_type, handle->queue>>>(
-      (float *)x, element_num)));
+  BprintBlock(k_dim, k_type, handle->queue, (float *)x, element_num);
   return MLUOP_STATUS_SUCCESS;
 }
 
